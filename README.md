@@ -16,6 +16,7 @@ flyrank-w2-crud-api/
 ├── main.py
 ├── requirements.txt
 ├── README.md
+├── TEST_RESULTS.md
 └── .gitignore
 ```
 
@@ -113,7 +114,11 @@ FastAPI automatically generates interactive API documentation at:
 
 `http://localhost:8000/docs`
 
-For the assignment submission, test the complete CRUD cycle in Swagger and add a screenshot of the `/docs` page to this README.
+For the final assignment submission, test the complete CRUD cycle in Swagger and add a screenshot of the `/docs` page here.
+
+## Test Results
+
+The implemented API has been verified against the required CRUD status-code behavior. See [TEST_RESULTS.md](TEST_RESULTS.md) for the test matrix.
 
 ## CRUD Cycle
 
