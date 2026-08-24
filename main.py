@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import Body, FastAPI, HTTPException
 
 app = FastAPI(
     title="Task CRUD API",
@@ -38,3 +38,15 @@ def get_task(task_id: int):
         if task["id"] == task_id:
             return task
     raise HTTPException(status_code=404, detail=f"Task {task_id} not found")
+
+
+@app.post("/tasks", status_code=201, summary="Create a new task")
+def create_task(body: dict = Body(default={} )):
+    title = body.get("title")
+    if not isinstance(title, str) or not title.strip():
+        raise HTTPException(status_code=400, detail="title is required")
+
+    next_id = max((task["id"] for task in tasks), default=0) + 1
+    task = {"id": next_id, "title": title.strip(), "done": False}
+    tasks.append(task)
+    return task
