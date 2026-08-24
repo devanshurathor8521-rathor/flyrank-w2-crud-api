@@ -1,4 +1,5 @@
 from fastapi import Body, FastAPI, HTTPException
+from fastapi.responses import Response
 
 app = FastAPI(
     title="Task CRUD API",
@@ -50,3 +51,34 @@ def create_task(body: dict = Body(default={} )):
     task = {"id": next_id, "title": title.strip(), "done": False}
     tasks.append(task)
     return task
+
+
+@app.put("/tasks/{task_id}", summary="Update a task")
+def update_task(task_id: int, body: dict = Body(default={} )):
+    task = next((item for item in tasks if item["id"] == task_id), None)
+    if task is None:
+        raise HTTPException(status_code=404, detail=f"Task {task_id} not found")
+
+    if not body:
+        raise HTTPException(status_code=400, detail="Request body cannot be empty")
+
+    if "title" in body:
+        if not isinstance(body["title"], str) or not body["title"].strip():
+            raise HTTPException(status_code=400, detail="title must not be empty")
+        task["title"] = body["title"].strip()
+
+    if "done" in body:
+        if not isinstance(body["done"], bool):
+            raise HTTPException(status_code=400, detail="done must be a boolean")
+        task["done"] = body["done"]
+
+    return task
+
+
+@app.delete("/tasks/{task_id}", status_code=204, summary="Delete a task")
+def delete_task(task_id: int):
+    for index, task in enumerate(tasks):
+        if task["id"] == task_id:
+            tasks.pop(index)
+            return Response(status_code=204)
+    raise HTTPException(status_code=404, detail=f"Task {task_id} not found")
